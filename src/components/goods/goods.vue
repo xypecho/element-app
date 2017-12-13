@@ -79,11 +79,11 @@
 				let foodlist=this.refs.foodList.getElementsByClassName("food-list-hook");
 				let height=0;
 				for (let i = 0; i < foodlist.length; i++) {
-					item=foodlist[i];
-					height += item.clientHeight;
-					this.ListHeight.push(height);
-					console.log('下面是正是咖啡壶空间');
-					console.log(this.ListHeight);
+					alert(i);
+					// item=foodlist[i];
+					// height += item.clientHeight;
+					// this.ListHeight.push(height);
+					// console.log(this.ListHeight);
 				}
 			},
 		}
