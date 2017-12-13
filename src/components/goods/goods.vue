@@ -102,9 +102,17 @@
 				let height=0;
 				this.ListHeight.push(height);
 				for (let i = 0; i < foodlist.length; i++) {
+<<<<<<< HEAD
 					let item=foodlist[i];
 					height += item.clientHeight;
 					this.ListHeight.push(height);
+=======
+					alert(i);
+					// item=foodlist[i];
+					// height += item.clientHeight;
+					// this.ListHeight.push(height);
+					// console.log(this.ListHeight);
+>>>>>>> origin/master
 				}
 				console.log('下面是正是咖啡壶空间');
 				console.log(this.ListHeight);
