@@ -2,7 +2,7 @@
 	<div class="goods">
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
-				<li v-for='item in goods' class="menu-item">
+				<li v-for='(item,index) in goods' class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index)">
 					<span class="text border-1px">
 						<span :class='classMap[item.type]' class="icon" v-if="item.type>0"></span>{{item.name}}
 					</span>
@@ -11,10 +11,10 @@
 		</div>
 		<div class="goods-wrapper" ref="foodsWrapper">
 			<ul>
-				<li v-for="item in goods" class="food-list" ref="foodList">
+				<li v-for="item in goods" class="food-list  food-list-hook" ref="foodList">
 					<h2 class="title">{{item.name}}</h2>
 					<ul>
-						<li v-for="food in item.foods" class="food-item  food-list-hook">
+						<li v-for="food in item.foods" class="food-item">
 							<div class="icon">
 								<img :src="food.image" width="57" height="57">
 							</div>
@@ -49,7 +49,8 @@
 		data() {
 			return{
 				goods:[],
-				ListHeight:[]
+				ListHeight:[],
+				scrollY:0
 			};
 		},
 		created() {
@@ -66,25 +67,47 @@
 			});	
 			this.classMap=['decrease','discount','special','invoice','guarantee'];
 		},
+		computed:{
+			currentIndex(){
+				for (let i =0;i<this.ListHeight.length;i++) {
+					let height1=this.ListHeight[i];
+					let height2=this.ListHeight[i+1];
+					if (!height2 || (this.scrollY<height2 && this.scrollY>=height1)) {
+						return i;
+					}
+				}
+				return 0;
+			}
+		},
 		methods:{
+			selectMenu(index){
+				let foodlist=this.$refs.foodsWrapper.getElementsByClassName("food-list-hook");
+				let el=foodlist[index];
+				this.foodscroll.scrollToElement(el,500);
+			},
 			_initscroll(){
-				this.menuscroll = new BScroll(this.$refs.menuWrapper,{});
-				this.foodscroll = new BScroll(this.$refs.foodsWrapper,{});
+				this.menuscroll = new BScroll(this.$refs.menuWrapper,{
+					click:true
+				});
+				this.foodscroll = new BScroll(this.$refs.foodsWrapper,{
+					probeType:3
+				});
 				this.foodscroll.on("scroll",(pos) => {
-					alert(1241);
-					alert(this.ListHeight);
+					this.scrollY=Math.abs(Math.round(pos.y));
+					console.log(this.scrollY);
 				});
 			},
 			calculateheight(){
-				let foodlist=this.refs.foodList.getElementsByClassName("food-list-hook");
+				let foodlist=this.$refs.foodsWrapper.getElementsByClassName("food-list-hook");
 				let height=0;
+				this.ListHeight.push(height);
 				for (let i = 0; i < foodlist.length; i++) {
-					item=foodlist[i];
+					let item=foodlist[i];
 					height += item.clientHeight;
 					this.ListHeight.push(height);
-					console.log('下面是正是咖啡壶空间');
-					console.log(this.ListHeight);
 				}
+				console.log('下面是正是咖啡壶空间');
+				console.log(this.ListHeight);
 			},
 		}
 	};
@@ -108,6 +131,9 @@
 				height:54px
 				padding:0 12px
 				line-height:14px
+				&.current
+					background-color:#ffffff
+					font-weight:700
 				.icon
 					display:inline-block
 					vertical-align:top
