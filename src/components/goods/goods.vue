@@ -29,16 +29,22 @@
 									<span class="now">￥{{food.price}}</span>
 									<span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
 								</div>
+								<div class="carcontrol-wrapper">
+									<carcontrol :food="food"></carcontrol>
+								</div>
 							</div>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
+		<shopcart :sellerdelivery="seller.deliveryPrice" :minprice="seller.minPrice"></shopcart>
 	</div>
 </template>
 <script>
 	import BScroll from 'better-scroll';
+	import shopcart from '../../components/shopcart/shopcart'
+	import carcontrol from '../../components/carcontrol/carcontrol'
 	const ERR_OK=0;
 	export default{
 		props: {
@@ -102,21 +108,17 @@
 				let height=0;
 				this.ListHeight.push(height);
 				for (let i = 0; i < foodlist.length; i++) {
-<<<<<<< HEAD
 					let item=foodlist[i];
 					height += item.clientHeight;
 					this.ListHeight.push(height);
-=======
-					alert(i);
-					// item=foodlist[i];
-					// height += item.clientHeight;
-					// this.ListHeight.push(height);
-					// console.log(this.ListHeight);
->>>>>>> origin/master
 				}
 				console.log('下面是正是咖啡壶空间');
 				console.log(this.ListHeight);
 			},
+		},
+		components:{
+			shopcart,
+			carcontrol
 		}
 	};
 </script>
@@ -219,6 +221,10 @@
 							font-size:10px
 							text-decoration:line-through
 							color:rgb(147,153,159)
+					.carcontrol-wrapper
+						position:absolute
+						bottom:18px
+						right:18px
 						
 
 							
