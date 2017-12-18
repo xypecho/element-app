@@ -38,7 +38,7 @@
 				</li>
 			</ul>
 		</div>
-		<shopcart :sellerdelivery="seller.deliveryPrice" :minprice="seller.minPrice"></shopcart>
+		<shopcart :selectgoods="selectgoods" :sellerdelivery="seller.deliveryPrice" :minprice="seller.minPrice"></shopcart>
 	</div>
 </template>
 <script>
@@ -83,6 +83,17 @@
 					}
 				}
 				return 0;
+			},
+			selectgoods() {
+			  let foods = [];
+			  this.goods.forEach((good) => {
+			    good.foods.forEach((food) => {
+			      if (food.count) {
+			        foods.push(food);
+			      }
+			    });
+			  });
+			  return foods;
 			}
 		},
 		methods:{
@@ -96,6 +107,7 @@
 					click:true
 				});
 				this.foodscroll = new BScroll(this.$refs.foodsWrapper,{
+					click:true,
 					probeType:3
 				});
 				this.foodscroll.on("scroll",(pos) => {

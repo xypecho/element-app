@@ -2,7 +2,7 @@
 	<div class="shopcart">
 		<div class="content">
 			<div class="content-left">
-				<div class="logo-wrapper">
+				<div class="logo-wrapper" @click="toggleList">
 					<div class="logo" :class="{'highlight':totalprice>0}">
 						<span class="icon-shopping_cart" :class="{'highlight':totalprice>0}"></span>
 					</div>
@@ -15,10 +15,32 @@
 				{{paydesc}}
 			</div>
 		</div>
+		<transition name="fold">
+		<div class="shopcart-list" v-show="listShow">
+		  <div class="list-header">
+		    <h1 class="title">购物车</h1>
+		    <span class="empty">清空</span>
+		  </div>
+		  <div class="list-content" ref="listContent">
+		    <ul>
+		      <li v-for="food in selectgoods">
+		        <span class="name">{{food.name}}</span>
+		        <div class="price">
+		          <span>￥{{food.price*food.count}}</span>
+		        </div>
+		        <div class="cartcontrol-wrapper">
+		          <cartcontrol :food="food"></cartcontrol>
+		        </div>
+		      </li>
+		    </ul>
+		  </div>
+		</div>
+		</transition>
 	</div>
 </template>
 
 <script>
+	
 	export default{
 		props:{
 			selectgoods:{
@@ -26,7 +48,7 @@
 				default(){
 					return [
 						{
-							count:1,
+							count:0,
 							price:10
 						}
 					];
@@ -39,6 +61,11 @@
 			minprice:{
 				type:Number,
 				default:0
+			}
+		},
+		data(){
+			return{
+				fold:true
 			}
 		},
 		computed:{
@@ -64,6 +91,23 @@
 				}else{
 					return `去结算`;
 				}
+			},
+			listShow(){
+				if (!this.totalcount) {
+					this.fold=true;
+					return false;
+				}else{
+					let show=!this.fold;
+					return show;
+				}
+			}
+		},
+		methods:{
+			toggleList(){
+				if (!this.totalcount) {
+					return false;
+				}
+				this.fold=!this.fold;
 			}
 		}
 	};
@@ -155,4 +199,35 @@
 				&.highlight
 					background-color:#00b43c
 					color:#fff
+		.shopcart-list
+			position:absolute
+			top:0
+			left:0
+			z-index:100
+			width:100%
+			transform:translate3d(0,-100%,0)
+			&.fold-enter,&.fold-leave
+				transition:all 0.6s
+				transform:translate3d(0,0,0)
+			.list-header
+				height:40px
+				background-color:#f3f5f7
+				line-height:40px
+				padding:0 18px
+				border-bottom 1px solid rgba(7,17,27,0.1)
+				.title
+					font-size:14px
+					font-weight:200
+					color:rgb(7,17,27)
+					float:left
+				.empty
+					color:rgb(0,160,220)
+					font-size:12px
+					float:right
+			.list-content
+				padding:0 18px
+				background-color:#ffffff
+				max-height:217px
+				
+				
 </style>
