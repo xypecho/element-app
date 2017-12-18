@@ -38,7 +38,11 @@
 				</li>
 			</ul>
 		</div>
+<<<<<<< HEAD
 		<shopcart :selectgoods="selectgoods" :sellerdelivery="seller.deliveryPrice" :minprice="seller.minPrice"></shopcart>
+=======
+		<shopcart :selectfoods="selectfoods" :sellerdelivery="seller.deliveryPrice" :minprice="seller.minPrice"></shopcart>
+>>>>>>> origin/master
 	</div>
 </template>
 <script>
@@ -56,7 +60,8 @@
 			return{
 				goods:[],
 				ListHeight:[],
-				scrollY:0
+				scrollY:0,
+				selectfoods: {}
 			};
 		},
 		created() {
@@ -84,6 +89,7 @@
 				}
 				return 0;
 			},
+<<<<<<< HEAD
 			selectgoods() {
 			  let foods = [];
 			  this.goods.forEach((good) => {
@@ -94,6 +100,16 @@
 			    });
 			  });
 			  return foods;
+=======
+			selectfoods(){
+				let foods=[];
+				this.goods.forEach((good) => {
+					good.foods.forEach((food) =>{
+						foods.push(food);
+					})
+				})
+				return foods;
+>>>>>>> origin/master
 			}
 		},
 		methods:{
