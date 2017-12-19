@@ -19,11 +19,11 @@
 		<div class="shopcart-list" v-show="listShow">
 		  <div class="list-header">
 		    <h1 class="title">购物车</h1>
-		    <span class="empty">清空</span>
+		    <span class="empty" @click="empty">清空</span>
 		  </div>
 		  <div class="list-content" ref="listContent">
 		    <ul>
-		      <li v-for="food in selectgoods">
+		      <li v-for="food in selectgoods" class="food">
 		        <span class="name">{{food.name}}</span>
 		        <div class="price">
 		          <span>￥{{food.price*food.count}}</span>
@@ -36,11 +36,13 @@
 		  </div>
 		</div>
 		</transition>
+		<div class="mask" v-show="listShow"></div>
 	</div>
 </template>
 
 <script>
-	
+	import BScroll from 'better-scroll';
+	import cartcontrol from "../../components/carcontrol/carcontrol"
 	export default{
 		props:{
 			selectgoods:{
@@ -98,6 +100,11 @@
 					return false;
 				}else{
 					let show=!this.fold;
+					if (show) {
+						this.listContentscroll=new BScroll(this.$refs.listContent,{
+							click:true
+						})
+					}
 					return show;
 				}
 			}
@@ -108,7 +115,15 @@
 					return false;
 				}
 				this.fold=!this.fold;
+			},
+			empty(){
+				this.selectgoods.forEach((good) =>{
+					good.count=0;
+				})
 			}
+		},
+		components:{
+			cartcontrol
 		}
 	};
 </script>
@@ -120,7 +135,7 @@
 		bottom: 0
 		width:100%
 		height:48px
-		z-index:99
+		z-index:8
 		background-color:#141d27
 		.content
 			display:flex
@@ -203,7 +218,7 @@
 			position:absolute
 			top:0
 			left:0
-			z-index:100
+			z-index:-1
 			width:100%
 			transform:translate3d(0,-100%,0)
 			&.fold-enter,&.fold-leave
@@ -228,6 +243,33 @@
 				padding:0 18px
 				background-color:#ffffff
 				max-height:217px
-				
-				
+				overflow:hidden
+				.food
+					padding 12px 0
+					border-bottom:1px solid rgba(7,17,27,0.1)
+					position:relative
+					.name
+						font-size:14px
+						color:rgb(7,17,27)
+						line-height:24px
+					.price
+						font-size:14px
+						font-weight:700
+						line-height:24px
+						color:rgb(240,20,20)
+						position:absolute
+						bottom:12px
+						right:90px
+					.cartcontrol-wrapper
+						position:absolute
+						right:0
+						bottom:6px
+		.mask
+			position:fixed
+			top:0
+			left:0
+			width:100%
+			height:100%
+			z-index:-2
+			background-color:rgba(7,17,27,0.6)
 </style>
