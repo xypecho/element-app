@@ -18,13 +18,32 @@
 					<span class="now">￥{{food.price}}</span>
 					<span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
 				</div>
+				<div class="carcontrol-wrapper">
+					<carcontrol :food="food"></carcontrol>	
+				</div>
+				<div @click="selectfirst(food)" class="buy" v-show="!food.count || food.count==0">加入购物车</div>
 			</div>
+		</div>
+		<split></split>
+		<div class="foosinfo">
+			<h1 class="title">商品介绍</h1>
+			<p class="info">{{food.info}}</p>
+		</div>
+		<split></split>
+		<div class="ratings">
+			<h1>商品评价</h1>
+			<ratingselect></ratingselect>	
 		</div>
 	</div>
 	</transition>
 </template>
 
 <script>
+	import carcontrol from '../../components/carcontrol/carcontrol'
+	import split from '../../components/split/split'
+	import ratingselect from '../../components/ratingselect/ratingselect'
+	import Vue from 'vue'
+	import BScroll from 'better-scroll'
 	export default{
 		props:{
 			food:{
@@ -42,7 +61,15 @@
 			},
 			hide(){
 				this.showflag=false;
+			},
+			selectfirst(food){
+				Vue.set(this.food,'count',1);
 			}
+		},
+		components:{
+			carcontrol,
+			split,
+			ratingselect
 		}
 	};
 </script>
@@ -83,6 +110,7 @@
 		.content
 			padding:18px
 			font-size:0
+			position:relative
 			h1
 				font-size:14px
 				font-weight:700
@@ -107,5 +135,32 @@
 					font-size:10px
 					text-decoration:line-through
 					color:rgb(147,153,159)
-					
+			.carcontrol-wrapper
+				position:absolute
+				right:18px
+				bottom:18px
+			.buy
+				position:absolute
+				right:18px
+				bottom:25px
+				width:74px
+				height:24px
+				font-size:10px
+				color:rgb(255,255,255)
+				line-height:24px
+				border-radius:24px
+				background-color:rgb(0,160,220)
+				text-align:center
+		.foosinfo
+			padding:18px
+			.title
+				line-height:14px
+				margin-bottom:6px
+				font-size:14px
+				color:rgb(7,17,27)
+			.info
+				font-size:12px
+				font-weight:200
+				color:rgb(77,85,93)
+				line-height:24px
 </style>
