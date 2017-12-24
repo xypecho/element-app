@@ -1,20 +1,20 @@
 <template>
 	<div class="ratingselect">
 		<div class="rating-type border-1px">
-		  <span class="block positive" :class="{'active':selectType==2}">{{desc.all}}<span class="count">12</span></span>
-		  <span class="block positive" :class="{'active':selectType==1}">{{desc.positive}}<span class="count">123</span></span>
-		  <span class="block negative" :class="{'active':selectType==0}">{{desc.negative}}<span class="count">311</span></span>
+		  <span class="block positive" :class="{'active':selectType==2}" @click="select(2)">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
+		  <span class="block positive" :class="{'active':selectType==0}" @click="select(0)">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
+		  <span class="block negative" :class="{'active':selectType==1}" @click="select(1)">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
 		</div>
-		<div class="switch">
-		  <span class="icon-check_circle"></span>
+		<div class="switch" @click="toggleContent">
+		  <span class="icon-check_circle" :class="{'on':onlyContent}"></span>
 		  <span class="text">只看有内容的评价</span>
 		</div>
 	</div>
 </template>
 
 <script>
-	// const POSITIVE=0;
-	// const NEGATIVE=1;
+	const POSITIVE=0;
+	const NEGATIVE=1;
 	const ALL=2;
 	export default{
 		props:{
@@ -41,6 +41,28 @@
 						negative:"吐槽"
 					}
 				}
+			}
+		},
+		computed:{
+			positives(){
+				return this.ratings.filter((rating)=>{
+					return rating.rateType==POSITIVE;
+				});
+			},
+			negatives(){
+				return this.ratings.filter((rating)=>{
+					return rating.rateType==NEGATIVE;
+				});
+			}
+		},
+		methods:{
+			select(type){
+				this.selectType=type;
+				this.$emit('select',type);
+			},
+			toggleContent(){
+				this.onlyContent=!this.onlyContent;
+				this.$emit('toggle');
 			}
 		}
 	};
@@ -77,5 +99,19 @@
 					background-color:rgba(77,85,93,0.2)
 					&.active
 						background-color:rgb(77,85,93)
-						
+		.switch
+			padding:12px 18px
+			border-1px(rgba(7,17,27,0.1))
+			.text
+				font-size:12px
+				color:rgb(147,153,159)
+				line-height:24px
+				margin-left:4px	
+				vertical-align:top
+			.icon-check_circle
+				font-size:24px
+				color:rgb(147,153,159)
+				line-height:24px
+				&.on
+					color: #00c850	
 </style>

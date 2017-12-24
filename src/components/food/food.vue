@@ -29,9 +29,24 @@
 				<p class="info">{{food.info}}</p>
 			</div>
 			<split></split>
-			<div class="ratings">
+			<div class="ratings" @toggle="toggleContent" @select="selectRating">
 				<h1>商品评价</h1>
-				<ratingselect :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>	
+				<ratingselect :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+				<div class="rating-wrapper">
+					<ul v-show="food.ratings && food.ratings.length">
+						<li v-for="rating in food.ratings" class="rating-item border-1px">
+							<div class="user">
+								<span class="name">{{rating.username}}</span>
+								<img class="avatar" :src="rating.avatar" width="12" height="12">
+							</div>
+							<div class="time">{{rating.rateTime}}</div>
+							<p class="text">
+							  <span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>{{rating.text}}
+							</p>
+						</li>
+					</ul>
+					<div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+				</div>	
 			</div>
 		</div>
 	</div>
@@ -44,8 +59,8 @@
 	import ratingselect from '../../components/ratingselect/ratingselect'
 	import Vue from 'vue'
 	import BScroll from 'better-scroll'
-	// const POSITIVE=0;
-	// const NEGATIVE=1;
+	const POSITIVE=0;
+	const NEGATIVE=1;
 	const ALL=2;
 	export default{
 		props:{
@@ -69,7 +84,7 @@
 			show(){
 				this.showflag=true;
 				this.selectType=ALL;
-				this.onlyContent=true;
+				this.onlyContent=false;
 				this.$nextTick(() => {
 					if (!this.scroll) {
 					  this.scroll = new BScroll(this.$refs.food,{
@@ -85,6 +100,18 @@
 			},
 			selectfirst(food){
 				Vue.set(this.food,'count',1);
+			},
+			selectRating(type){
+				this.selectType=type;
+				this.$nextTick(()=>{
+					this.scroll.refresh();
+				})
+			},
+			toggleContent(){
+				this.onlyContent=!this.onlyContent;
+				this.$nextTick(()=>{
+					this.scroll.refresh();
+				})
 			}
 		},
 		components:{
@@ -96,6 +123,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+	@import '../../common/stylus/mixin.styl';
 	.food
 		position:fixed
 		top:0
@@ -191,5 +219,42 @@
 				margin-left:18px
 				font-size:14px
 				color:rgb(7,17,27)
-				
+			.rating-wrapper
+				padding:0 18px
+				font-size:0
+				.rating-item
+					padding:16px 0
+					position:relative
+					border-1px(rgba(7,17,27,0.1))
+					.user
+						position:absolute
+						top:16px
+						right:0
+						.name
+							font-size:10px
+							color:rgb(147,153,159)
+							line-height:12px
+							padding-right:6px
+						.avatar
+							border-radius:50%
+					.time
+						font-size:10px
+						color:rgb(147,153,159)
+						line-height:12px
+						margin-bottom:6px
+					.text
+						font-size:12px
+						color:rgb(7,17,27)
+						line-height:16px
+						.icon-thumb_up
+							font-size:12px
+							color:rgb(0,160,220)
+							line-height:24px
+							margin-right:4px
+						.icon-thumb_down
+							font-size:12px
+							color:rgb(147,153,159)
+							line-height:24px
+							margin-right:4px
+							
 </style>
