@@ -29,23 +29,23 @@
 				<p class="info">{{food.info}}</p>
 			</div>
 			<split></split>
-			<div class="ratings" @toggle="toggleContent" @select="selectRating">
+			<div class="ratings">
 				<h1>商品评价</h1>
-				<ratingselect :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+				<ratingselect @toggle="toggleContent" @select="selectRating" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
 				<div class="rating-wrapper">
 					<ul v-show="food.ratings && food.ratings.length">
-						<li v-for="rating in food.ratings" class="rating-item border-1px">
+						<li v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings" class="rating-item border-1px">
 							<div class="user">
 								<span class="name">{{rating.username}}</span>
 								<img class="avatar" :src="rating.avatar" width="12" height="12">
 							</div>
-							<div class="time">{{rating.rateTime}}</div>
+							<div class="time">{{rating.rateTime | formatDate}}</div>
 							<p class="text">
 							  <span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>{{rating.text}}
 							</p>
 						</li>
 					</ul>
-					<div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+					<div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
 				</div>	
 			</div>
 		</div>
@@ -59,6 +59,7 @@
 	import ratingselect from '../../components/ratingselect/ratingselect'
 	import Vue from 'vue'
 	import BScroll from 'better-scroll'
+	import {formatDate} from '../../common/js/date'
 	const POSITIVE=0;
 	const NEGATIVE=1;
 	const ALL=2;
@@ -112,6 +113,22 @@
 				this.$nextTick(()=>{
 					this.scroll.refresh();
 				})
+			},
+			needShow(type,text){
+				if (this.onlyContent && !text) {
+					return false;
+				}
+				if (this.selectType===ALL) {
+					return true;
+				}else{
+					return type===this.selectType;
+				}
+			}
+		},
+		filters:{
+			formatDate(time){
+				let date=new Date(time);
+				return formatDate(date,"yyyy-MM-dd hh:mm");
 			}
 		},
 		components:{
