@@ -26,23 +26,23 @@
 			</div>
 		</div>
 		<split></split>
-		<ratingselect @toggle="toggleContent" @select="selectRating" :selectType="selectType" :onlyContent="onlyContent" :ratings="ratings"></ratingselect>
+		<ratingselect @toggle="toggleContent" @select="selectRating" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="ratings"></ratingselect>
 		<div class="rating-wrapper">
 			<ul>
-				<li v-for="rating in ratings" class="rating-item border-1px">
+				<li v-show="needShow(rating.rateType,rating.text)" v-for="rating in ratings" class="rating-item border-1px">
 					<div class="avatar">
 						<img :src="rating.avatar" width="28" height="28">
 					</div>
 					<div class="content">
-						<div class="name"></div>
+						<div class="name">{{rating.username}}</div>
 						<div class="star-wrapper">
 							<star :size="24" :score="rating.score"></star>
-							<span class="score">{{rating.score}}</span>
+							<span class="deliveryTime" v-show="rating.deliveryTime">{{rating.deliveryTime}}分钟送达</span>
 						</div>
 						<p class="text">{{rating.text}}</p>
 						<div class="recommend">
 							<span class="icon-thumb_up"></span>
-							<span v-for="item in rating.recommend">{{item}}</span>
+							<span class="item" v-for="item in rating.recommend">{{item}}</span>
 						</div>
 						<div class="time">{{rating.rateTime | formatDate}}</div>
 					</div>
@@ -56,8 +56,8 @@
 	import split from '../../components/split/split'
 	import ratingselect from '../../components/ratingselect/ratingselect'
 	import {formatDate} from '../../common/js/date'
-	const POSITIVE=0;
-	const NEGATIVE=1;
+	// const POSITIVE=0;
+	// const NEGATIVE=1;
 	const ALL=2;
 	const ERR_OK=0;
 	export default{
@@ -76,6 +76,24 @@
 						positive:"满意",
 						negative:"不满意"
 				}
+			}
+		},
+		methods:{
+			needShow(type,text){
+				if (this.onlyContent && !text) {
+					return false;
+				}
+				if (this.selectType===ALL) {
+					return true;
+				}else{
+					return type===this.selectType;
+				}
+			},
+			selectRating(type){
+				this.selectType=type;
+			},
+			toggleContent(){
+				this.onlyContent=!this.onlyContent;
 			}
 		},
 		created(){
@@ -168,15 +186,69 @@
 						color:rgb(147,153,159)
 						line-height:18px
 		.rating-wrapper
-			padding:18px
-			width:100%
+			padding:0 18px
 			.rating-item
 				border-1px(rgba(7,17,27,0.1))
 				font-size:0
+				padding:18px 0
+				display:flex
 				.avatar
+					flex:0 0 28px
+					width:28px
+					margin-right:12px
 					img
-						padding:18px 12px 6px 18px
 						border-radius:50%
-
-					
+				.content
+					flex:1
+					position:relative
+					.name
+						font-size:10px
+						color:rgb(7,17,27)
+						line-height:12px
+						margin-bottom:4px
+					.star-wrapper
+						margin-bottom:6px
+						font-size:0
+						.star
+							vertical-align:top
+							display:inline-block
+							margin-right:6px
+						.deliveryTime
+							font-size:10px
+							font-weight:200
+						    color:rgb(147,153,159)
+						    line-height:12px
+						    display:inline-block
+					.text
+						font-size:12px
+						color:rgb(7,17,27)
+						line-height:18px
+					.recommend
+						line-height:16px
+						.icon-thumb_up,.item
+							display:inline-block
+							maigin:0 8px 4px 0
+							font-size:9px
+							margin-right:4px
+						.icon-thumb_up
+							font-size:12px
+							color:rgb(0,160,220)
+							line-height:18px
+						.item
+							border-radius:2px
+							border:1px solid rgba(7,17,27,0.1)
+							background-color:rgb(255,255,255)
+							font-size:9px
+							color:rgb(147,153,159)
+							line-height:18px
+							text-align:center
+							padding:0 6px
+					.time
+						font-size:10px
+						font-weight:200
+						line-height:12px
+						color:rgb(147,153,159)
+						position:absolute
+						top:0
+						right:0
 </style>
