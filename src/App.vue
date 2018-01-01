@@ -12,11 +12,17 @@
 
 <script>
 import header from './components/header/header.vue';
+import {urlParse} from "./common/js/util";
 const ERR_OK=0;
 export default {
   data() {
     return{
-      seller:{}
+      seller:{
+        id:(()=>{
+          let getprame=urlParse();
+          return getprame;
+        })()
+      }
     };
   },
   name: 'app',
@@ -24,7 +30,7 @@ export default {
     'v-header':header
   },
   created(){
-    this.$http.get('/api/seller').then(response => {
+    this.$http.get('/api/seller?id='+this.seller.id).then(response => {
        // get body data
        response = response.body;
        if (response.errno === ERR_OK) {
