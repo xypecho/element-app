@@ -1,21 +1,13 @@
-# sell
+# vue版饿了么
 
-> a sell app
+>初学vue跟着视频写的vue版饿了么
 
-## Build Setup
+## 技术栈
+>vue2 + vue-cli + vue-resource + vue-router + webpack + ES6
 
-``` bash
-# install dependencies
+## 项目运行
+~~~~
+git clone https://github.com/xypecho/element-app.git
 npm install
-
-# serve with hot reload at localhost:8080
 npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+~~~~
